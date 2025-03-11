@@ -3,57 +3,33 @@ const horas = document.querySelector("#theNumbers > li:nth-child(3)")
 const minutos = document.querySelector('#theNumbers > li:nth-child(5)')
 const segundos = document.querySelector('#theNumbers > li:nth-child(7)')
 
-setInterval(() => {
-    if(segundos.innerText > 00) {
-        if(segundos.innerText > 10) {
-            segundos.innerText = `${segundos.innerText - 1}`
-        } else {
-            segundos.innerText = `${'0' + String(segundos.innerText - 1)}`
-        }
-    } else {
-        changeMinute()
-    }
-}, 1000)
+const targetDate = new Date("2025-03-30").getTime()
 
-function changeMinute() {
-    if(minutos.innerText > 00) {
-        if (minutos.innerText > 10) {
-            minutos.innerText = `${minutos.innerText - 1}`
-            segundos.innerText = '59'
-        } else {
-            minutos.innerText = `${'0' + String(minutos.innerText - 1)}`
-            segundos.innerText = '59'
-        }
-    } else {
-        changeHour()
+function updateCountdown() {
+    const now = new Date().getTime()
+    const timeLeft = targetDate - now
+
+    if (timeLeft <= 0) {
+        dias.innerText = "00"
+        horas.innerText = "00"
+        minutos.innerText = "00"
+        segundos.innerText = "00"
+        return
     }
+
+    const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24))
+    const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+    const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60))
+    const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000)
+
+    dias.innerText = days.toString().padStart(2, '0')
+    horas.innerText = hours.toString().padStart(2, '0')
+    minutos.innerText = minutes.toString().padStart(2, '0')
+    segundos.innerText = seconds.toString().padStart(2, '0')
 }
 
-function changeHour() {
-    if(horas.innerText > 00) {
-        if(horas.innerText > 10) {
-            horas.innerText = `${horas.innerText - 1}`
-            minutos.innerText = '60'
-        } else {
-            horas.innerText = `${'0' + String(horas.innerText - 1)}`
-            minutos.innerText = '60'
-        }
-    } else{
-        changeDay()
-    }
-}
-
-function changeDay() {
-    if (dias.innerText > 00) {
-        if(dias.innerText > 10) {
-            dias.innerText = `${dias.innerText - 1}`
-            horas.innerText = '24'
-        } else {
-            dias.innerText = `${'0' + String(dias.innerText - 1)}`
-            horas.innerText = '24'
-        }
-    }
-}
+setInterval(updateCountdown, 1000)
+updateCountdown()
 
 const bg = document.querySelector('.bg')
 const loginBox = document.querySelector('.loginBox')
